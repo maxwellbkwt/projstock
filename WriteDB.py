@@ -1,3 +1,6 @@
 import csv
+import os
 
-def write_to_csv(filename,)
+#arg:filename
+def write_to_csv(filename):
+   with open(filename,'a')
