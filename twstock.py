@@ -1,5 +1,5 @@
 import requests
-import beautifulsoup4 as bs
+from bs4 import Beautifulsoup as bs
 import json
 
 def get_webmsg (year, month, stock_id):
