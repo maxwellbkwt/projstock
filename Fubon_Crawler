@@ -1,0 +1,51 @@
+import urllib.request
+import twder
+import requests
+from bs4 import BeautifulSoup
+
+token = 'qq0EAfbf6KQArNZLR0SDGXLAbEqLV2uCNr3UM2hN599'
+
+chaper_url = 'https://www.findrate.tw/bank/8/#.XTL8OZMzZhF'
+
+def lineNotifyMessage(token, msg):
+    headers = {
+            "Authorization": "Bearer " + token,
+            "Content-Type" : "application/x-www-form-urlencoded"
+            }
+    payload = {'message': msg}
+    r = requests.post("https://notify-api.line.me/api/notify", headers = headers, params = payload)
+    return r.status_code
+
+def getUSDBuy():
+
+    headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0'}
+    req = urllib.request.Request(url=chaper_url, headers=headers)
+    html = urllib.request.urlopen(req).read()
+
+    soup = BeautifulSoup(html, 'html.parser')
+
+    data = soup.find_all('tr')
+
+    for values in  data:
+
+        StrValue = values.get_text()
+        ListTd = StrValue.split('\n')
+        print(ListTd)
+        Currency = ListTd[1]
+
+        if Currency == "美金 USD":
+
+            BuyCash = ListTd[3]
+            SellCash = ListTd[4]
+            SpotBuy = ListTd[5]
+            SpotSell = ListTd[6]
+
+            message = "7-20 spot selling : "+SpotSell
+            lineNotifyMessage(token, message)
+            
+
+def main():
+    getUSDBuy()
+
+if __name__ == '__main__':
+    main()
